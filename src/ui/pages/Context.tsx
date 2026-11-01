@@ -215,9 +215,11 @@ export function ContextPage() {
                     {source.id} · {source.kind}
                   </span>
                 </div>
-                <p className="mt-1 text-sm text-secondary">
-                  {source.summary ?? source.by}
-                </p>
+                {source.summary || source.by ? (
+                  <p className="mt-1 text-sm text-secondary">
+                    {source.summary || source.by}
+                  </p>
+                ) : null}
                 {source.processing && (
                   <p className="mt-1 text-sm text-secondary">
                     {source.processing === "ready"

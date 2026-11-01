@@ -26,6 +26,12 @@ The existing Deployment Workspace plugin demonstrates local stdio tools, version
 
 A source being available does not mean its entire body must be inserted into every prompt. Retrieve the relevant content and disclose gaps. A request for access supports “access requested”; it cannot establish “access granted.” Observed results and explicit commitments keep their own provenance.
 
+## Source intake and exports
+
+Chat attachments, connected material and the companion's future Add sources action should use the same intake operation and source register. The local service should copy direct uploads into the engagement's configured source folder, or register a link to an authorized existing file or folder. State which behavior will occur; preserve the original name, location and captured revision. The UI must not depend on a temporary chat attachment path or on symlinks as its interchange format.
+
+Both working surfaces read the same sources, proposed findings and accepted project records. The outward path is an explicit export of briefs, workflow maps, decisions or handover material to the engagement's deliverables folder or another chosen destination. Exported work does not silently replace client originals. The current fixture adapter supports prepared examples and pasted context; real uploads, linked-folder access and file exports remain backend work.
+
 ## State and scope
 
 Persist business records outside the UI. Keep selected rows, open sections and transient filters in UI state. Carry an explicit engagement ID through chat and panel calls; do not infer it from another panel's most recently opened project. Validate expected revisions on writes and reopen affected decisions when their supporting evidence changes.

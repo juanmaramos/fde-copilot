@@ -58,6 +58,26 @@ function reachExperiment(): Workspace {
 }
 
 describe("evidence and stage decisions", () => {
+  it("requires a named authority when an approval record has no attribution", () => {
+    const workspace = qualify();
+    const engagement = workspace.engagements[0];
+    const permission = engagement.sources.find(
+      (source) => source.stageIndex === 0 && source.decision === "advance",
+    )!;
+    delete permission.by;
+    delete permission.decisionBy;
+    expect(getGate(engagement, 0).ready).toBe(false);
+    expect(() =>
+      applyCommand(workspace, {
+        type: "decide",
+        engagementId: "harbor",
+        stageIndex: 0,
+        path: "advance",
+        reason: "The record says proceed, but the decision maker is unknown.",
+      }),
+    ).toThrow("Name the person");
+  });
+
   it("uses provided files as context without requiring per-file review, while access stays pending", () => {
     let workspace = applyCommand(createInitialWorkspace(), {
       type: "load-client-files",
@@ -282,6 +302,29 @@ describe("evidence and stage decisions", () => {
 });
 
 describe("development repository writes", () => {
+  it("restores missing example metadata as unknown instead of an attributed person or date", async () => {
+    const workspace = applyCommand(createInitialWorkspace(), {
+      type: "load-folder",
+      engagementId: "harbor",
+    });
+    const source = workspace.engagements[0].sources.find(
+      (item) => item.id === "S11",
+    )!;
+    source.by = "Author not recorded";
+    source.date = "Date not recorded";
+    source.version = "Inventory entry";
+    const repository = createFixtureRepository({
+      getItem: () => JSON.stringify(workspace),
+      setItem: () => {},
+    });
+    const restored = (await repository.read()).engagements[0].sources.find(
+      (item) => item.id === "S11",
+    )!;
+    expect(restored.by).toBeUndefined();
+    expect(restored.date).toBeUndefined();
+    expect(restored.version).toBeUndefined();
+  });
+
   it("rejects a stale revision without overwriting the current record", async () => {
     const repository = createFixtureRepository();
     const snapshot = await repository.read();

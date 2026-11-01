@@ -31,6 +31,8 @@ export function getGate(engagement: Engagement, stageIndex: number) {
     };
   });
   const authority = available.filter((record) => record.decision).at(-1);
+  const authorityName =
+    authority?.decisionBy?.trim() || authority?.by?.trim() || "";
   const missing = checks
     .filter((check) => check.result !== "pass")
     .map((check) => check.label);
@@ -41,6 +43,8 @@ export function getGate(engagement: Engagement, stageIndex: number) {
     missing.push(
       `Record the ${definition.authority.toLowerCase()}’s permission to proceed.`,
     );
+  if (authority?.decision === "advance" && !authorityName)
+    missing.push("Name the person who authorized this next step.");
   const cited = new Set(citedSourceIds(step.text));
   const basis = new Set(
     [...checks.map((check) => check.source), authority]
@@ -52,7 +56,13 @@ export function getGate(engagement: Engagement, stageIndex: number) {
       missing.push(`Link ${id} in the brief so its basis can be checked.`);
   if (stageIndex > getCurrentStage(engagement))
     missing.push("Complete the preceding stage first.");
-  return { checks, authority, missing, ready: missing.length === 0 };
+  return {
+    checks,
+    authority,
+    authorityName,
+    missing,
+    ready: missing.length === 0,
+  };
 }
 
 export function reopenDecisions(

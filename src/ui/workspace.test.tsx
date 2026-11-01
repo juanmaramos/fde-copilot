@@ -53,6 +53,27 @@ async function withFiles() {
 }
 
 describe("workspace interactions", () => {
+  it("keeps attribution optional and exposes missing metadata in source details", async () => {
+    const repository = await withFiles();
+    await repository.execute(
+      { type: "load-folder", engagementId: "harbor" },
+      1,
+    );
+    const user = userEvent.setup();
+    open(repository, "/engagements/harbor/sources/S11");
+    await screen.findByRole("heading", { name: "team-directory.xlsx" });
+    expect(screen.queryByText("From", { exact: true })).toBeNull();
+    expect(screen.queryByRole("textbox")).toBeNull();
+    const summary = screen.getByText("Source details", { exact: true });
+    const details = summary.closest("details")!;
+    expect(details.open).toBe(false);
+    await user.click(summary);
+    expect(details.open).toBe(true);
+    expect(within(details).getByText("Attribution")).toBeTruthy();
+    expect(within(details).getByText("Source date")).toBeTruthy();
+    expect(within(details).getAllByText("Not recorded")).toHaveLength(2);
+  });
+
   it("keeps one current navigation destination for nested sources and work context", async () => {
     const repository = await withFiles();
     const user = userEvent.setup();

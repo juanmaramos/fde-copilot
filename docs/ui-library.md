@@ -60,6 +60,10 @@ Use semantic links and a labelled navigation landmark. Decorative separators sta
 
 ## Working density and privacy
 
+Source headers show type and any known attribution or source date as quiet labeled facts. Omit unknown attribution and dates from the header; show the gaps under `Source details`, alongside location, source version and the application's record revision. A source can remain useful without an identified person. Import adapters should use email headers, document properties or explicit source statements, keeping inferred attribution reviewable and separate from who uploaded the file and when. Filenames, filesystem owners and names mentioned in the body do not establish authorship. The preview uses prepared values; metadata corrections through chat belong to the future import flow. Stage decisions still require a named authority.
+
+Use a leading SDK icon in source-list rows for email, presentations, spreadsheets and documents, with a generic file fallback. Keep the text type available and the icon decorative. The open record uses its text type without repeating the icon.
+
 Use 20px page titles in narrow panels and 24px in wide views, 16px section headings and 14px working copy. Avoid large introductory text and repeated client-name headings. Keep spacing sufficient for reading and controls, with more detail available on demand. Use SDK icons beside navigation labels; icon-only actions require an accessible name and a tooltip.
 
 The engagement switcher shows the current item while closed and supports search. Hide client names substitutes stable engagement aliases in the picker, navigation, breadcrumbs and document title. It does not redact source text, people, filenames or other document contents, and is not an access-control mechanism. State that limitation at the control.

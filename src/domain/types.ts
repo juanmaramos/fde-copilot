@@ -21,7 +21,7 @@ export interface SourceSeed {
   id: string;
   title: string;
   kind: string;
-  by: string;
+  by?: string;
   body: string;
   covers: Record<string, CheckResult>;
   decision?: "advance" | "hold" | null;

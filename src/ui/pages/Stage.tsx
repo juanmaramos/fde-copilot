@@ -634,7 +634,7 @@ export function StagePage() {
           <div className="mt-6 border-t border-default pt-4">
             <h3 className="font-medium">Authority record</h3>
             <p className="mt-1 text-sm text-secondary">
-              {gate.authority.decisionBy ?? gate.authority.by}
+              {gate.authorityName || "Name not recorded"}
               {gate.authority.decisionSummary
                 ? ` · ${gate.authority.decisionSummary}`
                 : ""}

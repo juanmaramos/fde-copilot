@@ -275,7 +275,6 @@ export function applyCommand(
             command.title?.trim() ||
             `Context for ${stages[stageIndex].name.toLowerCase()}`,
           kind: "Notes",
-          by: "Provided in this workspace",
           body: command.body.trim(),
           covers: {},
           folder: "Added context",
@@ -330,7 +329,7 @@ export function applyCommand(
         reason: command.reason.trim(),
         authority:
           command.path === "advance"
-            ? gate.authority!.decisionBy || gate.authority!.by
+            ? gate.authorityName
             : "You · Delivery lead",
         sourceId: command.path === "advance" ? gate.authority!.id : undefined,
         sourceVersions: Object.fromEntries(
@@ -399,10 +398,21 @@ export function createFixtureRepository(
           }
         }),
       );
-      // Earlier previews called pending access a failed check. The unchanged
-      // fictional email still blocks progress; it is not a technical test result.
+      // Normalize source records restored from earlier previews.
       candidate.engagements.forEach((item) =>
         item.sources.forEach((source) => {
+          // Older example inventories used display strings for missing metadata.
+          if (source.example) {
+            if (source.by === "Author not recorded") delete source.by;
+            if (source.date === "Date not recorded") delete source.date;
+            if (source.version === "Inventory entry") delete source.version;
+          }
+          if (
+            source.kind === "Notes" &&
+            source.folder === "Added context" &&
+            source.by === "Provided in this workspace"
+          )
+            delete source.by;
           if (
             source.example &&
             source.id === "S02" &&

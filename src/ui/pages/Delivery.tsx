@@ -174,7 +174,7 @@ export function DeliveryPage() {
                 {gate.authority && (
                   <div className="mt-2">
                     <p className="text-sm">
-                      {gate.authority.decisionBy ?? gate.authority.by}
+                      {gate.authorityName || "Name not recorded"}
                       {gate.authority.decisionSummary
                         ? ` · ${gate.authority.decisionSummary}`
                         : ""}

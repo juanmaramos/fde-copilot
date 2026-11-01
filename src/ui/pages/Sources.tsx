@@ -3,6 +3,13 @@ import { Badge } from "@openai/apps-sdk-ui/components/Badge";
 import { Button } from "@openai/apps-sdk-ui/components/Button";
 import { EmptyMessage } from "@openai/apps-sdk-ui/components/EmptyMessage";
 import { Input } from "@openai/apps-sdk-ui/components/Input";
+import {
+  Email,
+  File,
+  FileDocument,
+  FilePresentation,
+  FileSpreadsheet,
+} from "@openai/apps-sdk-ui/components/Icon";
 import { Select } from "@openai/apps-sdk-ui/components/Select";
 import { TextLink } from "@openai/apps-sdk-ui/components/TextLink";
 import {
@@ -25,6 +32,14 @@ import {
 } from "../components/SourceReferences";
 
 const pageSize = 12;
+const sourceIcons = new Map<string, typeof File>([
+  ["Email", Email],
+  ["Deck", FilePresentation],
+  ["Spreadsheet", FileSpreadsheet],
+  ["Document", FileDocument],
+  ["Transcript", FileDocument],
+  ["Notes", FileDocument],
+]);
 const localOrigin = "https://workspace.invalid";
 const sourceListPath = (engagementId: string, search = "") =>
   `/engagements/${encodeURIComponent(engagementId)}/sources${search}`;
@@ -480,6 +495,7 @@ function SourceListRow({
   const detailPath = `/engagements/${encodeURIComponent(engagementId)}/sources/${encodeURIComponent(source.id)}${search}`;
   const returnPath = sourceListPath(engagementId, search);
   const listScrollKey = `sources:${engagementId}:${search}`;
+  const SourceIcon = sourceIcons.get(source.kind) ?? File;
   const location = source.folder ?? "Location not recorded";
   const summary =
     source.summary?.trim() ||
@@ -490,19 +506,25 @@ function SourceListRow({
     <li
       className={`grid gap-1.5 border-b border-default py-3 last:border-b-0 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:gap-4 ${selected ? "-mx-2 rounded-md bg-primary-soft px-2" : ""}`}
     >
-      <div className="min-w-0">
-        <TextLink
-          as={Link}
-          to={detailPath}
-          state={{ engagementId, sourceListPath: returnPath, listScrollKey }}
-          onClick={() =>
-            writeSessionValue(listScrollKey, String(window.scrollY))
-          }
-          className="break-all font-medium"
-        >
-          {source.filename ?? source.title}
-        </TextLink>
-        <p className="mt-0.5 truncate text-sm text-secondary">{summary}</p>
+      <div className="flex min-w-0 items-start gap-3">
+        <SourceIcon
+          className="mt-0.5 size-5 shrink-0 text-secondary"
+          aria-hidden="true"
+        />
+        <div className="min-w-0">
+          <TextLink
+            as={Link}
+            to={detailPath}
+            state={{ engagementId, sourceListPath: returnPath, listScrollKey }}
+            onClick={() =>
+              writeSessionValue(listScrollKey, String(window.scrollY))
+            }
+            className="break-all font-medium"
+          >
+            {source.filename ?? source.title}
+          </TextLink>
+          <p className="mt-0.5 truncate text-sm text-secondary">{summary}</p>
+        </div>
       </div>
       <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-secondary">
         <span>{source.kind}</span>
@@ -640,37 +662,57 @@ export function SourceDetailPage() {
               <Badge color="warning">Content unavailable</Badge>
             ) : null}
           </div>
-          <dl className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-secondary">
-            <div className="flex gap-1">
-              <dt className="sr-only">Kind</dt>
-              <dd>{source.kind}</dd>
+          <dl className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+            <div className="flex min-w-0 gap-1.5">
+              <dt className="shrink-0 text-secondary">Type</dt>
+              <dd className="min-w-0 break-words">{source.kind}</dd>
             </div>
-            {source.folder ? (
-              <div className="flex gap-1">
-                <dt className="sr-only">Location</dt>
-                <dd className="break-all">{source.folder}</dd>
+            {source.by ? (
+              <div className="flex min-w-0 gap-1.5">
+                <dt className="shrink-0 text-secondary">From</dt>
+                <dd className="min-w-0 break-words">{source.by}</dd>
               </div>
             ) : null}
-            <div className="flex gap-1">
-              <dt className="sr-only">Origin</dt>
-              <dd className="break-all">
-                {source.by || "Origin not recorded"}
-              </dd>
-            </div>
             {source.date ? (
-              <div className="flex gap-1">
-                <dt className="sr-only">Date</dt>
-                <dd>{source.date}</dd>
+              <div className="flex min-w-0 gap-1.5">
+                <dt className="shrink-0 text-secondary">Date</dt>
+                <dd className="min-w-0 break-words">{source.date}</dd>
               </div>
             ) : null}
-            <div className="flex gap-1">
-              <dt className="sr-only">Revision</dt>
-              <dd>
-                Revision {source.revision}
-                {source.version ? ` · ${source.version}` : ""}
-              </dd>
-            </div>
           </dl>
+          <details className="mt-2 text-sm">
+            <summary className="w-fit cursor-pointer py-3 text-secondary underline underline-offset-2">
+              Source details
+            </summary>
+            <dl className="mt-3 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2">
+              {!source.by ? (
+                <>
+                  <dt className="text-secondary">Attribution</dt>
+                  <dd>Not recorded</dd>
+                </>
+              ) : null}
+              {!source.date ? (
+                <>
+                  <dt className="text-secondary">Source date</dt>
+                  <dd>Not recorded</dd>
+                </>
+              ) : null}
+              {source.folder ? (
+                <>
+                  <dt className="text-secondary">Location</dt>
+                  <dd className="min-w-0 break-words">{source.folder}</dd>
+                </>
+              ) : null}
+              {source.version ? (
+                <>
+                  <dt className="text-secondary">Source version</dt>
+                  <dd className="min-w-0 break-words">{source.version}</dd>
+                </>
+              ) : null}
+              <dt className="text-secondary">Record revision</dt>
+              <dd>{source.revision}</dd>
+            </dl>
+          </details>
           <p className="mt-4 max-w-3xl text-sm leading-6">
             {source.summary || "No summary was provided for this source."}
           </p>
