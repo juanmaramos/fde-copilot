@@ -597,7 +597,7 @@ export function StagePage() {
           {gate.checks.map((check) => (
             <li
               key={check.key}
-              className="flex flex-col gap-2 border-b border-default pb-4 sm:flex-row sm:items-start sm:justify-between"
+              className="flex flex-col items-start gap-2 border-b border-default pb-4 sm:flex-row sm:justify-between"
             >
               <div>
                 <p className="font-medium">{check.label}</p>

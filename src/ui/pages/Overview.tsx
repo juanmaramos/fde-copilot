@@ -169,7 +169,7 @@ export function OverviewPage() {
             return (
               <li
                 key={stage.id}
-                className="flex flex-col gap-2 py-4 sm:flex-row sm:items-center sm:justify-between"
+                className="flex flex-col items-start gap-2 py-4 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div className="min-w-0">
                   <p className="text-sm text-secondary">Stage {index + 1}</p>

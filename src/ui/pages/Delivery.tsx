@@ -110,7 +110,7 @@ export function DeliveryPage() {
                   return (
                     <li
                       key={check.key}
-                      className="flex flex-col gap-2 border-b border-default pb-3 sm:flex-row sm:items-start sm:justify-between"
+                      className="flex flex-col items-start gap-2 border-b border-default pb-3 sm:flex-row sm:justify-between"
                     >
                       <div>
                         <p>{check.label}</p>
