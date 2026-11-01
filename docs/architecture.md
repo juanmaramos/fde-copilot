@@ -2,14 +2,14 @@
 
 ## Ownership
 
-| Layer | Responsibility | Does not own |
-| --- | --- | --- |
+| Layer           | Responsibility                                                                                     | Does not own                           |
+| --------------- | -------------------------------------------------------------------------------------------------- | -------------------------------------- |
 | FDE application | Engagement records, source references, proposals, decisions, stage requirements and change history | Host presentation or component styling |
-| MCP server | Validated tools and resources over the application; authorized access to configured sources | A second copy of the engagement state |
-| Host adapter | MCP Apps connection, context updates, theme, navigation and optional extensions | Approval rules or extraction logic |
-| React interface | Source browsing, brief editing, exceptions and decision controls | Authoritative business state |
-| Apps SDK UI | Standard controls, design tokens and interaction primitives | FDE methodology or tool permissions |
-| Skills | Instructions for gathering context and carrying out FDE work | Enforcement of server permissions |
+| MCP server      | Validated tools and resources over the application; authorized access to configured sources        | A second copy of the engagement state  |
+| Host adapter    | MCP Apps connection, context updates, theme, navigation and optional extensions                    | Approval rules or extraction logic     |
+| React interface | Source browsing, brief editing, exceptions and decision controls                                   | Authoritative business state           |
+| Apps SDK UI     | Standard controls, design tokens and interaction primitives                                        | FDE methodology or tool permissions    |
+| Skills          | Instructions for gathering context and carrying out FDE work                                       | Enforcement of server permissions      |
 
 These are code boundaries, not separate services or a monorepo requirement. Start with one repository. Introduce directories when their first implementation lands: `src/domain`, `src/mcp`, `src/host`, `src/ui`, and `skills`. Generate a portable release under `dist/plugin` once packaging exists.
 
@@ -25,6 +25,12 @@ The existing Deployment Workspace plugin demonstrates local stdio tools, version
 6. The companion renders the updated server record; chat can continue the same work through tools.
 
 A source being available does not mean its entire body must be inserted into every prompt. Retrieve the relevant content and disclose gaps. A request for access supports “access requested”; it cannot establish “access granted.” Observed results and explicit commitments keep their own provenance.
+
+## Source intake and exports
+
+Chat attachments, connected material and the companion's future Add sources action should use the same intake operation and source register. The local service should copy direct uploads into the engagement's configured source folder, or register a link to an authorized existing file or folder. State which behavior will occur; preserve the original name, location and captured revision. The UI must not depend on a temporary chat attachment path or on symlinks as its interchange format.
+
+Both working surfaces read the same sources, proposed findings and accepted project records. The outward path is an explicit export of briefs, workflow maps, decisions or handover material to the engagement's deliverables folder or another chosen destination. Exported work does not silently replace client originals. The current fixture adapter supports prepared examples and pasted context; real uploads, linked-folder access and file exports remain backend work.
 
 ## State and scope
 

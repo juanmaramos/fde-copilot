@@ -1,6 +1,6 @@
 # Contributing
 
-Start with the [architecture](docs/architecture.md). This is currently a documentation baseline; there are no runtime build or test commands yet.
+Start with the [architecture](docs/architecture.md). Run `npm test` for workflow and interface behavior, and `npm run build` for strict TypeScript checks and the self-contained UI resource. Use `npm run dev` for browser checks. Backend and MCP host verification remain separate work.
 
 ## Change policy
 

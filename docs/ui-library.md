@@ -2,17 +2,17 @@
 
 ## Decision
 
-Use the published `@openai/apps-sdk-ui` package. Keep FDE Copilot's scaffolding and product components in this repository. Do not fork the library or port its standard controls into local code.
+Use the published `@openai/apps-sdk-ui` package. Keep fde studio's scaffolding and product components in this repository. Do not fork the library or port its standard controls into local code.
 
-The audited baseline is **0.2.2**, upstream commit [`0f00143c7a639906f1621fe58e1b6be7b5bea46d`](https://github.com/openai/apps-sdk-ui/tree/0f00143c7a639906f1621fe58e1b6be7b5bea46d). It supports React 18/19 and Tailwind 4; use React 19 and TypeScript for the first UI implementation. The package is MIT licensed. These are verified compatibility facts, not a claim that dependencies are installed here.
+The audited baseline is **0.2.2**, upstream commit [`0f00143c7a639906f1621fe58e1b6be7b5bea46d`](https://github.com/openai/apps-sdk-ui/tree/0f00143c7a639906f1621fe58e1b6be7b5bea46d). It supports React 18/19 and Tailwind 4. The frontend uses React 19, TypeScript and Tailwind 4; exact installed versions live in `package-lock.json`. The package is MIT licensed.
 
-When the UI runtime is added, pin the dependency and commit the generated lockfile:
+Pin the dependency and commit the generated lockfile:
 
 ```sh
 npm install --save-exact @openai/apps-sdk-ui@0.2.2
 ```
 
-Install compatible React, React DOM and Tailwind versions in that same implementation change. Review the resolved dependency graph and advisories before choosing the lockfile baseline.
+Review the resolved dependency graph and advisories when changing the lockfile. Use `npm ci --ignore-scripts` to install the reviewed baseline.
 
 ## Imports
 
@@ -36,11 +36,11 @@ Import that stylesheet first in the UI entrypoint. Adjust `@source` if its locat
 
 ## What belongs here
 
-| Use upstream directly | Compose in FDE Copilot |
-| --- | --- |
-| Buttons, inputs, badges, menus, tooltips, popovers, alerts and loading indicators | Source index and passage viewer |
-| Typography, spacing, surfaces, color and control tokens | Cited brief, proposed changes and client questions |
-| Accessible control behavior | Evidence requirements and an explicit stage decision |
+| Use upstream directly                                                             | Compose in fde studio                                |
+| --------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| Buttons, inputs, badges, menus, tooltips, popovers, alerts and loading indicators | Source index and passage viewer                      |
+| Typography, spacing, surfaces, color and control tokens                           | Cited brief, proposed changes and client questions   |
+| Accessible control behavior                                                       | Evidence requirements and an explicit stage decision |
 
 The complete library stays available through its public exports. Do not copy every component into our repository or wrap controls just to rename them. Build semantic lists, tables and disclosure sections where appropriate; the audited package has no `Table`, `Accordion` or `Drawer` component entrypoint.
 
@@ -57,6 +57,34 @@ Breadcrumbs describe hierarchy. A contextual Return to qualification link may co
 On a source detail page, list counts, search and location filters belong to the list view. Do not repeat them above the document and push its navigation down the panel. Top-level pages, inline previews and dialogs do not need artificial breadcrumb levels.
 
 Use semantic links and a labelled navigation landmark. Decorative separators stay out of accessible names. Follow the [WAI breadcrumb pattern](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/); build this small composition from semantic HTML and SDK TextLink rather than inventing an SDK Breadcrumb component.
+
+## Working density and privacy
+
+Source headers show type and any known attribution or source date as quiet labeled facts. Omit unknown attribution and dates from the header; show the gaps under `Source details`, alongside location, source version and the application's record revision. A source can remain useful without an identified person. Import adapters should use email headers, document properties or explicit source statements, keeping inferred attribution reviewable and separate from who uploaded the file and when. Filenames, filesystem owners and names mentioned in the body do not establish authorship. The preview uses prepared values; metadata corrections through chat belong to the future import flow. Stage decisions still require a named authority.
+
+Use a leading SDK icon in source-list rows for email, presentations, spreadsheets and documents, with a generic file fallback. Keep the text type available and the icon decorative. The open record uses its text type without repeating the icon.
+
+Use 20px page titles in narrow panels and 24px in wide views, 16px section headings and 14px working copy. Avoid large introductory text and repeated client-name headings. Keep spacing sufficient for reading and controls, with more detail available on demand. Use SDK icons beside navigation labels; icon-only actions require an accessible name and a tooltip.
+
+The engagement switcher shows the current item while closed and supports search. Hide client names substitutes stable engagement aliases in the picker, navigation, breadcrumbs and document title. It does not redact source text, people, filenames or other document contents, and is not an access-control mechanism. State that limitation at the control.
+
+Verify the page at sidebar widths as well as fullscreen. Filters must wrap rather than force the panel wider, tables may scroll inside their own labelled region, and source details must retain a single parent-navigation control.
+
+Below the sidebar breakpoint, keep Overview, Work, Sources and Delivery in a compact floating bottom capsule. Retain labels and 44px tab targets, account for the bottom safe area, and reserve scroll space below the final control. The bar stays inside our app surface. Wider views use the left sidebar instead. Compact views combine the engagement controls in the header and omit the repeated client-name strip.
+
+### Navigation geometry and composition
+
+Apple publishes one [official iOS and iPadOS 27 Figma kit](https://www.figma.com/community/file/1651309003795292092/ios-and-ipados-27), linked from [Apple Design Resources](https://developer.apple.com/design/resources/). The public Figma preview requires sign-in for layer inspection. Geometry was verified on 1 November 2026 in Apple's public Sketch kit, revision 36 dated 27 October, rather than inferred from a screenshot or a third-party recreation.
+
+| Reference                                                                                                                               | Verified geometry                                                                  | Application mapping                                                           |
+| --------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| [Four-tab iPhone capsule](https://www.sketch.com/s/04c24d8b-38fb-4afb-8836-36617e022f02/f/B8B0B866-1C91-4C3E-8B20-2AED1FBE5209#Inspect) | 346 × 62; maximum-radius outer shape; 8px horizontal stack insets                  | Maximum width 346px; height 62px; radius 31px; fluid width in narrower panels |
+| Active selection in the same component                                                                                                  | Height 54px; radius 27px; 4px vertical inset; 4px horizontal outset beyond its tab | A decorative selection behind the route link; link remains a 54px target      |
+| [Sidebar selected row](https://www.sketch.com/s/04c24d8b-38fb-4afb-8836-36617e022f02/f/4BC6FD76-55E2-4E51-A9AA-3C783BB4FD52#Inspector)  | Height 44px; radius 22px                                                           | 44px minimum row with a 22px selection radius                                 |
+
+The kit marks the outer shape and sidebar corners as Apple smooth 60%; the active tab selection is rounded. Standard CSS capsules preserve the measured radii and spacing, but do not reproduce Apple's continuous-corner algorithm or Liquid Glass renderer. Keep SDK colors, typography, icons and focus tokens; do not copy Apple's assets, fonts or multilayer shader approximation into the plugin. The 21px example screen inset supplies the minimum web offset, increased when the host exposes a larger safe area. Reserve content space from the same height and offset tokens.
+
+`WorkspaceNavigation` owns one set of route links in both layouts, including active state and counts. `WorkspaceSidebar` composes the fixed header, scrollable navigation region and footer. This follows the [shadcn sidebar composition](https://ui.shadcn.com/docs/components/base/sidebar) without importing shadcn, Radix or Base UI, or adding unused collapse providers and drawer controls. Apps SDK UI remains the design system. The app-specific geometry tokens are in `src/ui/main.css`; component layout is in `WorkspaceNavigation.module.css`.
 
 ## Tokens and meaning
 
