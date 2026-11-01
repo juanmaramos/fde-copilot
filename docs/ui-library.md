@@ -44,6 +44,20 @@ Import that stylesheet first in the UI entrypoint. Adjust `@source` if its locat
 
 The complete library stays available through its public exports. Do not copy every component into our repository or wrap controls just to rename them. Build semantic lists, tables and disclosure sections where appropriate; the audited package has no `Table`, `Accordion` or `Drawer` component entrypoint.
 
+## Navigation
+
+Place hierarchical navigation at the start of the content header, above the title. Keep it inside our app, below any host chrome. Use the same destination names in navigation, headings and breadcrumbs.
+
+For a source detail page, the hierarchy is `Harbor Studio → Sources → intake-sop.md`. Parent items are links; the current item is text. The Sources link restores the list's filters, page, scroll and selection. It does not mean browser history back, and a folder path is document metadata unless folders are actual navigable views.
+
+In narrow panels, replace a long trail with `← Sources` in that same header position and use the document title below it. Do not also render a second Back to sources control. In a wide list/detail layout, keep the list visible and omit the return control.
+
+Breadcrumbs describe hierarchy. A contextual Return to qualification link may coexist when a source was opened from the brief, because that destination differs from the parent list. Show it only when that return context exists. Keep review/save actions separate from navigation.
+
+On a source detail page, list counts, search and location filters belong to the list view. Do not repeat them above the document and push its navigation down the panel. Top-level pages, inline previews and dialogs do not need artificial breadcrumb levels.
+
+Use semantic links and a labelled navigation landmark. Decorative separators stay out of accessible names. Follow the [WAI breadcrumb pattern](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/); build this small composition from semantic HTML and SDK TextLink rather than inventing an SDK Breadcrumb component.
+
 ## Tokens and meaning
 
 Use SDK semantic tokens for all standard foundations. Add a small FDE alias only when the application gives it a useful meaning. For example, confirmed status can refer to `--color-text-success-soft`; its audited light value is `#008635`, with a different dark-theme value. Do not freeze that hex as the theme-independent definition.
