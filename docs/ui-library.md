@@ -68,6 +68,20 @@ Verify the page at sidebar widths as well as fullscreen. Filters must wrap rathe
 
 Below the sidebar breakpoint, keep Overview, Work, Sources and Delivery in a compact floating bottom capsule. Retain labels and 44px tab targets, account for the bottom safe area, and reserve scroll space below the final control. The bar stays inside our app surface. Wider views use the left sidebar instead. Compact views combine the engagement controls in the header and omit the repeated client-name strip.
 
+### Navigation geometry and composition
+
+Apple publishes one [official iOS and iPadOS 27 Figma kit](https://www.figma.com/community/file/1651309003795292092/ios-and-ipados-27), linked from [Apple Design Resources](https://developer.apple.com/design/resources/). The public Figma preview requires sign-in for layer inspection. Geometry was verified on 1 November 2026 in Apple's public Sketch kit, revision 36 dated 27 October, rather than inferred from a screenshot or a third-party recreation.
+
+| Reference                                                                                                                               | Verified geometry                                                                  | Application mapping                                                           |
+| --------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| [Four-tab iPhone capsule](https://www.sketch.com/s/04c24d8b-38fb-4afb-8836-36617e022f02/f/B8B0B866-1C91-4C3E-8B20-2AED1FBE5209#Inspect) | 346 × 62; maximum-radius outer shape; 8px horizontal stack insets                  | Maximum width 346px; height 62px; radius 31px; fluid width in narrower panels |
+| Active selection in the same component                                                                                                  | Height 54px; radius 27px; 4px vertical inset; 4px horizontal outset beyond its tab | A decorative selection behind the route link; link remains a 54px target      |
+| [Sidebar selected row](https://www.sketch.com/s/04c24d8b-38fb-4afb-8836-36617e022f02/f/4BC6FD76-55E2-4E51-A9AA-3C783BB4FD52#Inspector)  | Height 44px; radius 22px                                                           | 44px minimum row with a 22px selection radius                                 |
+
+The kit marks the outer shape and sidebar corners as Apple smooth 60%; the active tab selection is rounded. Standard CSS capsules preserve the measured radii and spacing, but do not reproduce Apple's continuous-corner algorithm or Liquid Glass renderer. Keep SDK colors, typography, icons and focus tokens; do not copy Apple's assets, fonts or multilayer shader approximation into the plugin. The 21px example screen inset supplies the minimum web offset, increased when the host exposes a larger safe area. Reserve content space from the same height and offset tokens.
+
+`WorkspaceNavigation` owns one set of route links in both layouts, including active state and counts. `WorkspaceSidebar` composes the fixed header, scrollable navigation region and footer. This follows the [shadcn sidebar composition](https://ui.shadcn.com/docs/components/base/sidebar) without importing shadcn, Radix or Base UI, or adding unused collapse providers and drawer controls. Apps SDK UI remains the design system. The app-specific geometry tokens are in `src/ui/main.css`; component layout is in `WorkspaceNavigation.module.css`.
+
 ## Tokens and meaning
 
 Use SDK semantic tokens for all standard foundations. Add a small FDE alias only when the application gives it a useful meaning. For example, confirmed status can refer to `--color-text-success-soft`; its audited light value is `#008635`, with a different dark-theme value. Do not freeze that hex as the theme-independent definition.

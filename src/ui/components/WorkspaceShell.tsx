@@ -29,6 +29,11 @@ import { getCurrentStage } from "../../domain/workflow";
 import { stages } from "../../domain/stages";
 import { EngagementSwitcher } from "./EngagementSwitcher";
 import {
+  WorkspaceNavigation,
+  type WorkspaceNavigationItem,
+} from "./WorkspaceNavigation";
+import { WorkspaceSidebar } from "./WorkspaceSidebar";
+import {
   readSessionValue,
   writeSessionValue,
 } from "../../data/browser-storage";
@@ -52,7 +57,7 @@ export function WorkspaceShell() {
     selected,
     hideClientNames,
   );
-  const links = [
+  const links: WorkspaceNavigationItem[] = [
     {
       name: "Overview",
       Icon: Grid,
@@ -72,6 +77,7 @@ export function WorkspaceShell() {
       Icon: Folder,
       to: `${base}/sources`,
       active: location.pathname.startsWith(`${base}/sources`),
+      count: selected.sources.length,
     },
     {
       name: "Delivery",
@@ -96,80 +102,64 @@ export function WorkspaceShell() {
       >
         Skip to the work
       </a>
-      <div className="min-h-screen pb-[calc(6rem+env(safe-area-inset-bottom))] md:grid md:grid-cols-[15rem_minmax(0,1fr)] md:pb-0">
-        <aside
-          className="border-b border-default bg-surface-secondary px-4 py-3 md:sticky md:top-0 md:flex md:h-screen md:flex-col md:border-r md:border-b-0 md:px-5 md:py-7"
-          aria-label="Engagement navigation"
-        >
-          <div className="flex items-center justify-between gap-3">
-            <Link
-              className="flex items-center gap-2 text-base font-medium tracking-tight"
-              to={`${base}/overview`}
-            >
-              <Groups className="size-5" aria-hidden="true" />
-              fde studio
-            </Link>
-            <div className="flex items-center gap-2">
-              <Tooltip content="This preview uses prepared example records. Changes stay local. Nothing is sent to a client or deployed.">
-                <span className="text-xs text-secondary md:hidden" tabIndex={0}>
-                  Example ⓘ
-                </span>
-              </Tooltip>
-              <Tooltip content="New engagement">
-                <ButtonLink
-                  as={Link}
-                  to="/new"
-                  color="secondary"
-                  variant="ghost"
-                  size="lg"
-                  className="w-10"
-                  aria-label="New engagement"
+      <div className="min-h-screen pb-[calc(var(--navigation-bar-height)+var(--navigation-bar-offset)+1.5rem)] md:grid md:grid-cols-[15rem_minmax(0,1fr)] md:pb-0">
+        <WorkspaceSidebar
+          header={
+            <>
+              <div className="flex items-center justify-between gap-3">
+                <Link
+                  className="flex items-center gap-2 text-base font-medium tracking-tight"
+                  to={`${base}/overview`}
                 >
-                  <Plus aria-hidden="true" />
-                </ButtonLink>
-              </Tooltip>
-            </div>
-          </div>
-          <div className="mt-3 md:mt-9">
-            <EngagementSwitcher
-              items={workspace.engagements.map((item) => ({
-                id: item.id,
-                label: getEngagementLabel(workspace, item, hideClientNames),
-              }))}
-              activeId={selected.id}
-              onSelect={(id) => void navigate(`/engagements/${id}/overview`)}
-              hideNames={hideClientNames}
-              onHideNamesChange={toggleNames}
-            />
-          </div>
-          <nav
-            aria-label="Workspace"
-            className="fixed bottom-[max(0.75rem,env(safe-area-inset-bottom))] left-1/2 z-20 grid w-[calc(100%-1.5rem)] max-w-72 -translate-x-1/2 grid-cols-4 gap-0.5 rounded-full border border-default bg-surface p-1 shadow-lg md:static md:mt-9 md:flex md:w-full md:max-w-none md:translate-x-0 md:flex-col md:rounded-none md:border-0 md:bg-transparent md:p-0 md:shadow-none"
-          >
-            {links.map((item) => (
-              <Link
-                key={item.name}
-                to={item.to}
-                aria-current={item.active ? "page" : undefined}
-                className={`flex min-h-11 flex-col items-center justify-center gap-0.5 rounded-full px-1 py-1 text-xs md:flex-row md:justify-start md:gap-3 md:rounded-lg md:px-3 md:py-2 md:text-sm ${item.active ? "bg-surface-tertiary font-medium" : "text-secondary hover:bg-surface-tertiary"}`}
-              >
-                <item.Icon
-                  className="size-4 md:size-[18px]"
-                  aria-hidden="true"
+                  <Groups className="size-5" aria-hidden="true" />
+                  fde studio
+                </Link>
+                <div className="flex items-center gap-2">
+                  <Tooltip content="This preview uses prepared example records. Changes stay local. Nothing is sent to a client or deployed.">
+                    <span
+                      className="text-xs text-secondary md:hidden"
+                      tabIndex={0}
+                    >
+                      Example ⓘ
+                    </span>
+                  </Tooltip>
+                  <Tooltip content="New engagement">
+                    <ButtonLink
+                      as={Link}
+                      to="/new"
+                      color="secondary"
+                      variant="ghost"
+                      size="lg"
+                      className="w-10"
+                      aria-label="New engagement"
+                    >
+                      <Plus aria-hidden="true" />
+                    </ButtonLink>
+                  </Tooltip>
+                </div>
+              </div>
+              <div className="mt-3 md:mt-9">
+                <EngagementSwitcher
+                  items={workspace.engagements.map((item) => ({
+                    id: item.id,
+                    label: getEngagementLabel(workspace, item, hideClientNames),
+                  }))}
+                  activeId={selected.id}
+                  onSelect={(id) =>
+                    void navigate(`/engagements/${id}/overview`)
+                  }
+                  hideNames={hideClientNames}
+                  onHideNamesChange={toggleNames}
                 />
-                {item.name}
-                {item.name === "Sources" && (
-                  <span className="ml-auto hidden text-xs text-secondary md:inline">
-                    {selected.sources.length}
-                  </span>
-                )}
-              </Link>
-            ))}
-          </nav>
-          <p className="mt-auto hidden pt-8 text-xs text-secondary md:block">
-            {selected.example ? "Example engagement" : "Engagement workspace"}
-          </p>
-        </aside>
+              </div>
+            </>
+          }
+          footer={
+            selected.example ? "Example engagement" : "Engagement workspace"
+          }
+        >
+          <WorkspaceNavigation items={links} />
+        </WorkspaceSidebar>
         <div className="min-w-0">
           <header
             aria-label="Engagement header"

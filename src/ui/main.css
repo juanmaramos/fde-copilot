@@ -5,6 +5,24 @@
 :root {
   font-family: var(--font-sans);
   color: var(--color-text-primary);
+  --navigation-edge-inset: 1.3125rem;
+  --navigation-bar-offset: max(
+    var(--navigation-edge-inset),
+    env(safe-area-inset-bottom, 0px)
+  );
+  --navigation-bar-max-width: 21.625rem;
+  --navigation-bar-padding: 0.25rem;
+  --navigation-bar-inline-padding: 0.5rem;
+  --navigation-selection-outset: 0.25rem;
+  --navigation-item-gap: 0.125rem;
+  --navigation-item-height: 3.375rem;
+  --navigation-bar-height: calc(
+    var(--navigation-item-height) + 2 * var(--navigation-bar-padding)
+  );
+  --navigation-bar-radius: calc(var(--navigation-bar-height) / 2);
+  --navigation-item-radius: calc(var(--navigation-item-height) / 2);
+  --sidebar-item-height: var(--control-size-2xl);
+  --sidebar-item-radius: calc(var(--sidebar-item-height) / 2);
 }
 
 html,

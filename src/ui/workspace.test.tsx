@@ -1,5 +1,11 @@
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import {
+  cleanup,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { RouterProvider } from "react-router/dom";
 import { createFixtureRepository } from "../data/fixture-repository";
@@ -47,6 +53,42 @@ async function withFiles() {
 }
 
 describe("workspace interactions", () => {
+  it("keeps one current navigation destination for nested sources and work context", async () => {
+    const repository = await withFiles();
+    const user = userEvent.setup();
+    const router = open(repository, "/engagements/harbor/sources/S02");
+    await screen.findByRole("heading", {
+      name: "Access and the request sample",
+    });
+    const navigation = screen.getByRole("navigation", { name: "Workspace" });
+    expect(within(navigation).getAllByRole("link")).toHaveLength(4);
+    expect(navigation.querySelectorAll('[aria-current="page"]')).toHaveLength(
+      1,
+    );
+    expect(
+      within(navigation)
+        .getByRole("link", { name: /^Sources/ })
+        .getAttribute("aria-current"),
+    ).toBe("page");
+
+    await user.click(within(navigation).getByRole("link", { name: "Work" }));
+    await screen.findByRole("heading", { name: "Qualification" });
+    await user.click(screen.getByRole("link", { name: "Open stage context" }));
+    await waitFor(() =>
+      expect(router.state.location.pathname).toBe(
+        "/engagements/harbor/context",
+      ),
+    );
+    expect(navigation.querySelectorAll('[aria-current="page"]')).toHaveLength(
+      1,
+    );
+    expect(
+      within(navigation)
+        .getByRole("link", { name: "Work" })
+        .getAttribute("aria-current"),
+    ).toBe("page");
+  });
+
   it("opens a cited passage and returns to the brief without a per-file review step", async () => {
     const repository = await withFiles();
     const user = userEvent.setup();
