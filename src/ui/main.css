@@ -1,0 +1,20 @@
+@import "tailwindcss";
+@import "@openai/apps-sdk-ui/css";
+@source "../../node_modules/@openai/apps-sdk-ui";
+
+:root {
+  font-family: var(--font-sans);
+  color: var(--color-text-primary);
+}
+
+html,
+body,
+#root {
+  min-height: 100vh;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  background-color: var(--color-surface);
+}

@@ -6,7 +6,7 @@
 - **MCP Apps** supplies the portable UI resource and host bridge.
 - **OpenAI MCP Extensions** adds host surfaces and capabilities such as a conversation panel, sidebar entrypoint, file viewer and composer interaction.
 
-Using an extension does not require Apps SDK UI, and importing a component does not register an extension. FDE Copilot uses both for different responsibilities. See the [official extensions overview](https://developers.openai.com/plugins/build/extensions).
+Using an extension does not require Apps SDK UI, and importing a component does not register an extension. fde studio uses both for different responsibilities. See the [official extensions overview](https://developers.openai.com/plugins/build/extensions).
 
 ## Host integration
 
@@ -21,7 +21,7 @@ The following is the metadata shape for the first companion render tool. It is a
 ```json
 {
   "ui": {
-    "resourceUri": "ui://fde-copilot/companion.html",
+    "resourceUri": "ui://fde-studio/companion.html",
     "visibility": ["model", "app"]
   },
   "openai/ui": {
@@ -34,17 +34,17 @@ The render tool must validate the requested engagement and any focused artifact,
 
 ## Extension priorities
 
-| Surface or capability | Purpose | Order |
-| --- | --- | --- |
-| Conversation panel (`thread`) | Inspect sources and review the brief beside the main chat | First slice |
-| Model-context updates | Give chat the selected engagement and artifact references | First slice; keep payloads bounded |
-| Sidebar app (`global`) | Open an engagement without starting from a message | After the first slice works |
-| Deep links | Open a specific engagement item | With sidebar navigation |
-| Editable chat draft | Prepare a discussion prompt for the user to send | When needed; preserve the existing draft and provide a copy fallback |
-| File viewers/editors | Open formats that our viewer actually supports | After parsing and revision handling work |
-| Composer mentions | Find and attach a particular engagement item | When search and item references are stable |
-| Structured settings | Configure actual product preferences | When preferences exist |
-| Recording or meeting integrations | Capture how work happens today as attributed context | Separate source adapter; not implied by a UI component |
+| Surface or capability             | Purpose                                                   | Order                                                                |
+| --------------------------------- | --------------------------------------------------------- | -------------------------------------------------------------------- |
+| Conversation panel (`thread`)     | Inspect sources and review the brief beside the main chat | First slice                                                          |
+| Model-context updates             | Give chat the selected engagement and artifact references | First slice; keep payloads bounded                                   |
+| Sidebar app (`global`)            | Open an engagement without starting from a message        | After the first slice works                                          |
+| Deep links                        | Open a specific engagement item                           | With sidebar navigation                                              |
+| Editable chat draft               | Prepare a discussion prompt for the user to send          | When needed; preserve the existing draft and provide a copy fallback |
+| File viewers/editors              | Open formats that our viewer actually supports            | After parsing and revision handling work                             |
+| Composer mentions                 | Find and attach a particular engagement item              | When search and item references are stable                           |
+| Structured settings               | Configure actual product preferences                      | When preferences exist                                               |
+| Recording or meeting integrations | Capture how work happens today as attributed context      | Separate source adapter; not implied by a UI component               |
 
 Do not register every surface at startup or claim support before its flow is tested. Respect the host's capability negotiation and current availability. Prefer shared MCP Apps methods; use `window.openai` only for a needed capability not covered by the standard or supported SDK. [Bridge guidance](https://developers.openai.com/plugins/build/chatgpt-ui#start-with-mcp-apps).
 

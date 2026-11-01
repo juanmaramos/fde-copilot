@@ -2,14 +2,14 @@
 
 ## Ownership
 
-| Layer | Responsibility | Does not own |
-| --- | --- | --- |
+| Layer           | Responsibility                                                                                     | Does not own                           |
+| --------------- | -------------------------------------------------------------------------------------------------- | -------------------------------------- |
 | FDE application | Engagement records, source references, proposals, decisions, stage requirements and change history | Host presentation or component styling |
-| MCP server | Validated tools and resources over the application; authorized access to configured sources | A second copy of the engagement state |
-| Host adapter | MCP Apps connection, context updates, theme, navigation and optional extensions | Approval rules or extraction logic |
-| React interface | Source browsing, brief editing, exceptions and decision controls | Authoritative business state |
-| Apps SDK UI | Standard controls, design tokens and interaction primitives | FDE methodology or tool permissions |
-| Skills | Instructions for gathering context and carrying out FDE work | Enforcement of server permissions |
+| MCP server      | Validated tools and resources over the application; authorized access to configured sources        | A second copy of the engagement state  |
+| Host adapter    | MCP Apps connection, context updates, theme, navigation and optional extensions                    | Approval rules or extraction logic     |
+| React interface | Source browsing, brief editing, exceptions and decision controls                                   | Authoritative business state           |
+| Apps SDK UI     | Standard controls, design tokens and interaction primitives                                        | FDE methodology or tool permissions    |
+| Skills          | Instructions for gathering context and carrying out FDE work                                       | Enforcement of server permissions      |
 
 These are code boundaries, not separate services or a monorepo requirement. Start with one repository. Introduce directories when their first implementation lands: `src/domain`, `src/mcp`, `src/host`, `src/ui`, and `skills`. Generate a portable release under `dist/plugin` once packaging exists.
 
